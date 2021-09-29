@@ -1,12 +1,14 @@
-name: Run Python Tests
-on: push
+name: Build and Publish to PyPI
+
+on: workflow_dispatch
 
 jobs:
-  test:
+  publish:
     strategy:
       matrix:
         include:
           - os: ubuntu-18.04
+            upload: true
           - os: windows-2016
     runs-on: ${{ matrix.os }}
     steps:
@@ -18,14 +20,17 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
-          python -m pip install pip -U
+          python -m pip install pip wheel -U
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest twine
 
-      - name: Do the testing
-        env:
-          PYTHONPATH: .
+      - name: Run tests and build wheel
         run: |
-          pytest pdfbrain
+          make wheel
+
+      - name: Publish
+        if: matrix.upload
+        run: |
+          PYPI_TOKEN={{ secrets.PYPI_TOKEN }} make publish
