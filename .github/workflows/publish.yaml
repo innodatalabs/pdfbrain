@@ -33,4 +33,4 @@ jobs:
       - name: Publish
         if: matrix.upload
         run: |
-          PYPI_TOKEN={{ secrets.PYPI_TOKEN }} make publish
+          PYPI_TOKEN=${{ secrets.PYPI_TOKEN }} make publish
