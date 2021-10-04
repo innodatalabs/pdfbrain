@@ -52,6 +52,8 @@ class PDFTextPage:
 
     @lazyproperty
     def text(self):
+        if len(self) == 0:
+            return ''
         array_p = (c_uint16 * (len(self) + 1))()
         rc = pdfium.FPDFText_GetText(self._ptr, 0, len(self), cast(array_p, POINTER(c_uint16)))
         if not rc:
