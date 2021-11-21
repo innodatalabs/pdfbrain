@@ -1,4 +1,4 @@
-import pypdfium as pdfium
+import pypdfium2 as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_page import PDFPage
 

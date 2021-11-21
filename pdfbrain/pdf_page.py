@@ -1,6 +1,6 @@
 from PIL import Image
 from ctypes import c_float, byref, create_string_buffer, cast, POINTER, c_ubyte
-import pypdfium as pdfium
+import pypdfium2 as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_text_page import PDFTextPage
 
