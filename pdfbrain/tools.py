@@ -23,5 +23,5 @@ def get_error_message():
         3: 'Data format error',
         4: 'Incorrect password error',
         5: 'Unsupported security scheme error',
-        6: 'License authorization error',
+        6: 'Page not found or content error',
     }.get(err_code, f'Error code {err_code}')
