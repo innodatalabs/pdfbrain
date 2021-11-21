@@ -2,8 +2,7 @@ import pypdfium as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_page import PDFPage
 
-# this line is very important, otherwise it won't work
-pdfium.FPDF_InitLibraryWithConfig(pdfium.FPDF_LIBRARY_CONFIG(2, None, None, 0))
+pdfium.FPDF_InitLibrary()
 
 
 class PDFFile:
