@@ -16,6 +16,20 @@ def test_smoke():
     img = pdf[1].render()
     assert img.size == (612, 792)
 
+def test_with():
+    with PDFFile.load(res('simple.pdf')) as pdf:
+        assert len(pdf) == 2
+
+        page0 = pdf[0]
+        assert page0.label == ''
+        assert page0.media_box == (0.0, 0.0, 612.0, 792.0)
+        assert page0.crop_box == (0.0, 0.0, 612.0, 792.0)
+
+    pdf.close()  # should be NOOP
+    pdf.close()  # should be NOOP
+    pdf.close()  # should be NOOP
+
+
 def test_text():
     pagen0 = PDFFile.load(res('simple.pdf'))[0]
 
