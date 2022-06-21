@@ -1,13 +1,20 @@
 from ctypes import POINTER, cast, byref, c_double, c_uint16
 import unicodedata
-import pypdfium as pdfium
+import pypdfium2 as pdfium
 from .tools import lazyproperty
+import weakref
 
+
+def _close_text_page(pageref):
+    page = pageref()
+    if page is not None:
+        page.close()
 
 class PDFTextPage:
     def __init__(self, parent, ptr):
         self._parent = parent
         self._ptr = ptr
+        weakref.finalize(self, _close_text_page, weakref.ref(self))
 
     @classmethod
     def load(cls, parent):
@@ -16,8 +23,10 @@ class PDFTextPage:
             raise RuntimeError('failed to load text')
         return cls(parent, ptr)
 
-    def __del__(self):
-        pdfium.FPDFText_ClosePage(self._ptr)
+    def close(self):
+        if self._ptr:
+            pdfium.FPDFText_ClosePage(self._ptr)
+            self._ptr = None
 
     def __len__(self):
         return pdfium.FPDFText_CountChars(self._ptr)

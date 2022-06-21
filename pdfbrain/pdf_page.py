@@ -1,15 +1,27 @@
 from PIL import Image
 from ctypes import c_float, byref, create_string_buffer, cast, POINTER, c_ubyte
-import pypdfium as pdfium
+import pypdfium2 as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_text_page import PDFTextPage
+import weakref
 
+
+def _close_page(pageref):
+    page = pageref()
+    if page:
+        page.close()
 
 class PDFPage:
     def __init__(self, parent, ptr, pageno):
         self._parent = parent
         self._ptr = ptr
         self._pageno = pageno
+        weakref.finalize(self, _close_page, weakref.ref(self))
+
+    def close(self):
+        if self._ptr:
+            pdfium.FPDF_ClosePage(self._ptr)
+            self._ptr = None
 
     @classmethod
     def load(cls, doc, pageno):
@@ -18,15 +30,10 @@ class PDFPage:
 
         ptr = pdfium.FPDF_LoadPage(doc._ptr, pageno)
         if not ptr:
-            import pdb; pdb.set_trace()
-            print(ptr, type(ptr))
             err_message = get_error_message()
             raise RuntimeError(f'PDFPage.load: failed to load page {pageno}: {err_message}')
 
         return cls(doc, ptr, pageno)
-
-    def __del__(self):
-        pdfium.FPDF_ClosePage(self._ptr)
 
     @lazyproperty
     def width(self):
@@ -93,7 +100,7 @@ class PDFPage:
     def label(self):
         '''Page label.'''
         out = create_string_buffer(4096)
-        l = pdfium.FPDF_GetPageLabel(self._parent._ptr, self._pageno, out, 4096)
+        l = pdfium.FPDF_GetPageLabel(self._parent._ptr, self._pageno + 1, out, 4096)
         if l < 4:
             return ''
         return out.raw[:l-2].decode('utf-16le')
