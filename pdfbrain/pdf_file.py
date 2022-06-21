@@ -1,11 +1,7 @@
-import pypdfium2 as pdfium
-import sys
+import pypdfium2._pypdfium as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_page import PDFPage
 import weakref
-
-# this line is very important, otherwise it won't work
-pdfium.FPDF_InitLibraryWithConfig(pdfium.FPDF_LIBRARY_CONFIG(2, None, None, 0))
 
 
 def _close_file(fileref):
@@ -49,6 +45,6 @@ class PDFFile:
         return PDFPage.load(self, pageno)
 
     def __iter__(self):
-        for pageno in range (len(self)):
+        for pageno in range(len(self)):
             yield self[pageno]
 
