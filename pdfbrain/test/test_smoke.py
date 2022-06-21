@@ -73,3 +73,11 @@ def test_search_flags():
     finder = text_page0.find('borin', match_whole_word=True)
     results = list(finder)
     assert len(results) == 0
+
+
+def test_page_label():
+    with PDFFile.load(res('bug_page_label.pdf')) as pdf:
+        assert len(pdf) == 24
+        assert pdf[0].label == '123'
+        assert pdf[22].label == '145'
+        assert pdf[23].label == ''
