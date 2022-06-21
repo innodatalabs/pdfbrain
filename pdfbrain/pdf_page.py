@@ -1,6 +1,6 @@
 from PIL import Image
 from ctypes import c_float, byref, create_string_buffer, cast, POINTER, c_ubyte
-import pypdfium2 as pdfium
+import pypdfium2._pypdfium as pdfium
 from .tools import lazyproperty, get_error_message
 from .pdf_text_page import PDFTextPage
 import weakref
@@ -99,11 +99,12 @@ class PDFPage:
     @lazyproperty
     def label(self):
         '''Page label.'''
-        out = create_string_buffer(4096)
-        l = pdfium.FPDF_GetPageLabel(self._parent._ptr, self._pageno + 1, out, 4096)
-        if l < 4:
+        n_bytes = pdfium.FPDF_GetPageLabel(self._parent._ptr, self._pageno, None, 0)
+        out = create_string_buffer(n_bytes)
+        n_bytes = pdfium.FPDF_GetPageLabel(self._parent._ptr, self._pageno, out, n_bytes)
+        if n_bytes < 4:
             return ''
-        return out.raw[:l-2].decode('utf-16le')
+        return out.raw[:n_bytes-2].decode('utf-16le')
 
     @staticmethod
     def _get_matrix(rotation, crop_box, rect, scale):

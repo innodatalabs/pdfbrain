@@ -1,5 +1,5 @@
 import functools
-import pypdfium2 as pdfium
+import pypdfium2._pypdfium as pdfium
 
 
 def lazyproperty(fn):

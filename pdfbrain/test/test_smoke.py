@@ -76,8 +76,19 @@ def test_search_flags():
 
 
 def test_page_label():
+    with PDFFile.load(res('labels.pdf')) as pdf:
+        assert pdf[0].label == 'i'
+        assert pdf[1].label == 'ii'
+        assert pdf[2].label == 'appendix-C'
+        assert pdf[3].label == 'appendix-D'
+        assert pdf[4].label == 'appendix-E'
+        assert pdf[5].label == 'appendix-F'
+        assert pdf[6].label == 'appendix-G'
+        assert pdf[7].label == 'appendix-H'
+    
     with PDFFile.load(res('bug_page_label.pdf')) as pdf:
         assert len(pdf) == 24
-        assert pdf[0].label == '123'
-        assert pdf[22].label == '145'
-        assert pdf[23].label == ''
+        assert pdf[0].label == '1'
+        assert pdf[1].label == '123'
+        assert pdf[22].label == '144'
+        assert pdf[23].label == '145'

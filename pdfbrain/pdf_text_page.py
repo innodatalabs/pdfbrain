@@ -1,6 +1,6 @@
 from ctypes import POINTER, cast, byref, c_double, c_uint16
 import unicodedata
-import pypdfium2 as pdfium
+import pypdfium2._pypdfium as pdfium
 from .tools import lazyproperty
 import weakref
 
