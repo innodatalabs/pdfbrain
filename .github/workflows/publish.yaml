@@ -9,7 +9,7 @@ jobs:
         include:
           - os: ubuntu-18.04
             upload: true
-          - os: windows-2016
+          - os: windows-2019
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out Git repository

@@ -28,6 +28,15 @@ class PDFTextPage:
             pdfium.FPDFText_ClosePage(self._ptr)
             self._ptr = None
 
+    def __del__(self):
+        self.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
     def __len__(self):
         return pdfium.FPDFText_CountChars(self._ptr)
 
