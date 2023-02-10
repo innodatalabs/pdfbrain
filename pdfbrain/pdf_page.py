@@ -23,6 +23,15 @@ class PDFPage:
             pdfium.FPDF_ClosePage(self._ptr)
             self._ptr = None
 
+    def __del__(self):
+        self.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
     @classmethod
     def load(cls, doc, pageno):
         if not (0 <= pageno < doc.numpages):

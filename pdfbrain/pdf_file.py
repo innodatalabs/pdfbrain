@@ -32,6 +32,9 @@ class PDFFile:
             pdfium.FPDF_CloseDocument(self._ptr)
             self._ptr = None
 
+    def __del__(self):
+        self.close()
+
     def __enter__(self):
         return self
 
